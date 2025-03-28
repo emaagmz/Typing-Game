@@ -54,21 +54,32 @@ function initEvents() {
     $input.addEventListener('keyup', onKeyUp)
 }
 
-function onKeyDown (e) {
-    const { key } = e
+function onKeyDown (event) {
+    const $currentWord = $paragraph.querySelector('x-word.active')
+    const $currentLetter = $currentWord.querySelector('x-letter.active')
+
+    const { key } = event
     if (key === ' ') {
-        e.preventDefault()
+      event.preventDefault()
 
-        const $nextWord = $currentWord.nextElementSibiling
-        const $nextLetter = $nextWord.querySelector('x-letter')
+      const $nextWord = $currentWord.nextElementSibling
+      const $nextLetter = $nextWord.querySelector('x-letter')
 
-        $currentWord.classList.remove('active')
-        $currentLetter.classList.remove('active')
+      $currentWord.classList.remove('active', 'marked')
+      $currentLetter.classList.remove('active')
 
-        $nextWord.classList.add('active')
-        $nextLetter.classList.add('active')
+      $nextWord.classList.add('active')
+      $nextLetter.classList.add('active')
 
-        $input.value = ''
+      $input.value = ''
+
+      const hasMissedLetters = $currentWord
+        .querySelectorAll('x-letter:not(.correct)').length > 0
+
+      const classToAdd = hasMissedLetters ? 'marked' : 'correct'
+      $currentWord.classList.add(classToAdd)
+
+      return
     }
 }
 
